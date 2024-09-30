@@ -1,0 +1,16 @@
+AllCops:
+  Exclude:
+    - 'bin/*'
+    - 'config/**/*.rb'
+    - 'db/**/*.rb'
+    - 'config.ru'
+    - 'config/**/*.rb'
+    - Gemfile
+    - Rakefile
+    - 'spec/**/*.rb'
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
