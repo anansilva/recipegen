@@ -7,7 +7,7 @@ class CreateRecipes < ActiveRecord::Migration[7.0]
       t.float :rating
       t.string :image_link
       t.string :author
-      t.text :ingredients
+      t.text :ingredients, array: true, default: []
       t.references :category, null: true, foreign_key: true
       t.references :cuisine, null: true, foreign_key: true
 

@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_30_193431) do
     t.float "rating"
     t.string "image_link"
     t.string "author"
-    t.text "ingredients"
+    t.text "ingredients", default: [], array: true
     t.bigint "category_id"
     t.bigint "cuisine_id"
     t.datetime "created_at", null: false
