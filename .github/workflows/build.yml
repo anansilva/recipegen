@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  packages: write
+  contents: read
+
 env:
   RAILS_ENV: test
   REGISTRY: ghcr.io
@@ -29,7 +33,6 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        # if: steps.file_changes.outputs.changes == 'true'
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
@@ -40,7 +43,6 @@ jobs:
           CR_REPOSITORY: ${{ env.IMAGE_NAME }}
           IMAGE_TAG: "ci"
           DOCKERFILE_PATH: ./Dockerfile
-        # if: steps.file_changes.outputs.changes == 'true'
         run: |
           docker build -t $CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG -f $DOCKERFILE_PATH .
           docker push $CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG 
