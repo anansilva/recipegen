@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
-      POSTGRES_DB: myapp
+      POSTGRES_DB: recipegen
   tdd:
     tty: true
     stdin_open: true
@@ -18,7 +18,7 @@ services:
                bundle exec rake db:create && \
                bundle exec rake db:migrate && \
                echo \"I'm ready. Happy TDDing!\" && \
-               sleep infinity"
+               bash"
     volumes:
       - .:/app
       - bundler_gems:/usr/local/bundle

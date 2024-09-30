@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  ci:
+    environment:
+      - RAILS_ENV=test
+      - COMPOSE_DOCKER_CLI_BUILD=1
+      - IMAGE_CACHE_FROM
+      - RAILS_MASTER_KEY
+    build:
+      context: .
+      target: ci
+      cache_from:
+        - "$IMAGE_CACHE_FROM"
+      args:
+        - DOCKER_BUILDKIT=1
+        - BUILDKIT_INLINE_CACHE=1
+    image: "$IMAGE_CACHE_FROM"
+    container_name: recipegen-ci
+    working_dir: /recipegen
+    command: >
+      bash -c "bundle exec rails db:create && \
+               bundle exec rails db:schema:load && \
+               bundle exec rails dartsass:build && \
+               bundle exec rubocop && \
+               bundle exec brakeman -w3 && \
+               bundle exec rspec spec"
+    volumes:
+      - ./:/recipegen
+    networks:
+      - app
+    depends_on:
+      - db
+
+  #### POSTGRES ####
+  db:
+    image: postgres:12
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: recipegen_test
+      PGDATA: /var/lib/postgresql/data/pgdata
+    networks:
+      - app
+
+networks:
+  app:
