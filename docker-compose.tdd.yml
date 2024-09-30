@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: myapp
+  tdd:
+    tty: true
+    stdin_open: true
+    build: .
+    container_name: app-tdd
+    command: >
+      bash -c "bundle && \
+               bundle exec rake db:create && \
+               bundle exec rake db:migrate && \
+               echo \"I'm ready. Happy TDDing!\" && \
+               sleep infinity"
+    volumes:
+      - .:/app
+      - bundler_gems:/usr/local/bundle
+    environment:
+      - RAILS_ENV=test
+    depends_on:
+      - db
+volumes:
+  postgres:
+  bundler_gems:
