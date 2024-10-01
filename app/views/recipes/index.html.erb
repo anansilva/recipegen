@@ -1,6 +1,10 @@
+<h1 class="text-center mb-4">RecipeGen</h1>
+<p class="text-center mx-auto mb-4 lh-base" style="max-width: 600px;">
+  Simply enter the ingredients you have on hand, and RecipeGen will instantly recommend delicious recipes tailored to your ingredients!
+</p>
+
 <turbo-frame id="search_results">
-  <%= form_with url: recipes_path, method: :get, data: { turbo: true }, class: "text-center mb-4" do |form| %>
-    <label for="ingredients" class="form-label">Enter ingredients (comma separated):</label>
+  <%= form_with url: recipes_path, method: :get, data: { turbo: true }, class: "text-center my-4" do |form| %>
     <div class="d-flex justify-content-center mb-3">
       <%= form.text_field :ingredients, 
         value: @ingredients.join(', '), 
@@ -11,6 +15,6 @@
   <% end %>
 
   <div id="results">
-    <%= render partial: 'recipes_list', locals: { recipes: @recipes } %>
+    <%= render partial: 'recipes_list', locals: { recipes: @recipes, ingredients: @ingredients, recipes_total_count: @recipes_total_count } %>
   </div>
 </turbo-frame>
