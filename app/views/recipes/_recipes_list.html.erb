@@ -18,8 +18,23 @@
               <p class="fw-bold">Ingredients:</p>
               <p><%= recipe.ingredients.join(', ') %></p>
               <% total_time = recipe.prep_time + recipe.cook_time %>
-              <div class="position-relative mt-5">
-                <span class="position-absolute bottom-0 end-0 p-3">
+              
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="star-rating">
+                  <% full_stars = recipe.rating.floor %>
+                  <% half_star = recipe.rating - full_stars >= 0.5 %>
+                  <% (1..5).each do |star| %>
+                    <% if star <= full_stars %>
+                      <i class="bi bi-star-fill"></i>
+                    <% elsif star == full_stars + 1 && half_star %>
+                      <i class="bi bi-star-half"></i>
+                    <% else %>
+                      <i class="bi bi-star"></i>
+                    <% end %>
+                  <% end %>
+                </div>
+                
+                <span class="position-relative p-3">
                   <i class="bi bi-clock"></i> <%= total_time %> minutes
                 </span>
               </div>
