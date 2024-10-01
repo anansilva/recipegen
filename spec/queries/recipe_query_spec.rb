@@ -24,7 +24,7 @@ RSpec.describe RecipeQuery do
                                     ingredients: ["1 can coconut milk", "1 cup chickpeas", "1 cup spinach",
                                                   "2 tablespoons curry powder", "1 tablespoon olive oil",
                                                   "1 teaspoon cumin", "1 teaspoon turmeric", "1/2 cup diced tomato",
-                                                  "Salt to taste"])}
+                                                  "Salt to taste", "tomatoes"])}
 
     let!(:recipe5) { create(:recipe, title: "Buttermilk Pancakes", cook_time: 15, prep_time: 10, rating: 4.9,
                                      image_link: "https://example.com/image_buttermilk.jpg",
@@ -32,7 +32,7 @@ RSpec.describe RecipeQuery do
                                      ingredients: ["2 cups all-purpose flour", "2 tablespoons sugar",
                                                    "1 teaspoon baking powder", "1 teaspoon baking soda",
                                                    "1/2 teaspoon salt", "2 cups buttermilk",
-                                                   "2 large eggs", "1/4 cup melted butter",
+                                                   "2 large eggs", "1/4 cup melted butter", "tomato",
                                                    "1 teaspoon vanilla extract"]) }
 
 
@@ -104,6 +104,13 @@ RSpec.describe RecipeQuery do
         it 'returns recipes ordered by rating' do
           recipes = recipe_query.search(["salt", "flour"])
           expect(recipes).to eq([recipe5, recipe1, recipe4, recipe2])
+        end
+      end
+
+      context 'when ingredients are repeated but in singular/plural forms' do
+        it 'returns recipes ordered by rating' do
+          recipes = recipe_query.search(["tomato"])
+          expect(recipes).to eq([recipe5, recipe4])
         end
       end
     end
