@@ -1,7 +1,9 @@
 <div class="mt-5">
   <% if recipes.present? %>
-    <h5 class="text-xl font-semibold mb-2"><%= recipes_total_count %> recipes found based on your ingredients:</h5>
-
+    <div class="d-flex justify-content-between">
+      <%== pagy_info(@pagy) %>
+      <%== pagy_bootstrap_nav(@pagy, link_extra: 'data-turbo-action=advance') %>
+    </div>
     <% recipes.each do |recipe| %>
       <div class="card mb-3">
         <div class="row g-0">
@@ -26,6 +28,10 @@
         </div>
       </div>
     <% end %>
+    <div class="d-flex justify-content-between">
+      <%== pagy_info(@pagy) %>
+      <%== pagy_bootstrap_nav(@pagy, link_extra: 'data-turbo-action=advance') %>
+    </div>
   <% elsif !recipes.present? && ingredients.present? %>
     <p class="text-center">Sorry... No recipes found for <%= ingredients.join(', ') %></p>
   <% end %>

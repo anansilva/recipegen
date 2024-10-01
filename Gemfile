@@ -72,3 +72,5 @@ gem "brakeman", "~> 6.2", :group => :development
 
 gem "dartsass-rails"
 gem "bootstrap"
+
+gem "pagy"

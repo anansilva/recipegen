@@ -5,7 +5,7 @@ FactoryBot.define do
     prep_time { 20 }
     cook_time { 40 }
     rating { 4.2 }
-    image_link { 'somelink' }
+    image_link { 'www.somelink.com' }
     author { 'anans' }
     category {  create(:category) }
   end
