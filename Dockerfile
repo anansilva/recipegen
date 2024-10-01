@@ -1,17 +1,22 @@
-FROM ruby:3.2.2
-RUN apt-get update -qq && apt-get install -y postgresql-client vim
+### BASE ###
+FROM ruby:3.2.2 as base
+RUN apt-get update -qq && apt-get install -y postgresql-client vim nodejs imagemagick ffmpeg poppler-utils libvips-tools
 WORKDIR /app
 COPY Gemfile /app/Gemfile
 COPY Gemfile.lock /app/Gemfile.lock
 
-ENV BUNDLER_VERSION 2.3.16
+ENV BUNDLER_VERSION 2.4.12
 RUN gem update --system \
     && gem install bundler -v $BUNDLER_VERSION \
         && bundle install -j 4
 
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
-EXPOSE 3000
+### CI ###
+FROM base as ci
 
-CMD ["rails", "server", "-b", "0.0.0.0"]
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
+
+RUN bundle install
+
+ADD . /app
+

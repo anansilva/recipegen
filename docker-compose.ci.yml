@@ -20,6 +20,7 @@ services:
     command: >
       bash -c "bundle exec rails db:create && \
                bundle exec rails db:schema:load && \
+               bundle exec rails dartsass:build && \
                bundle exec rubocop && \
                bundle exec brakeman -w3 && \
                bundle exec rspec spec"
