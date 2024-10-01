@@ -2,21 +2,21 @@ require 'rails_helper'
 
 RSpec.describe RecipeQuery do
   describe '#search' do
-    let!(:recipe1) { Recipe.create!(title: "Golden Sweet Cornbread", cook_time: 25, prep_time: 10, rating: 4.74,
-                                    image_link: "https://example.com/image1.jpg", author: "bluegirl",
-                                    ingredients: ["1 cup all-purpose flour", "1 cup yellow cornmeal", "⅔ cup white sugar",
-                                                  "1 teaspoon salt", "3 ½ teaspoons baking powder", "1 egg", "1 cup milk",
-                                                  "⅓ cup vegetable oil"]) }
+    let!(:recipe1) { create(:recipe, title: "Golden Sweet Cornbread", cook_time: 25, prep_time: 10, rating: 4.74,
+                                     image_link: "https://example.com/image1.jpg", author: "bluegirl",
+                                     ingredients: ["1 cup all-purpose flour", "1 cup yellow cornmeal", "⅔ cup white sugar",
+                                                   "1 teaspoon salt", "3 ½ teaspoons baking powder", "1 egg", "1 cup milk",
+                                                   "⅓ cup vegetable oil"]) }
 
-    let!(:recipe2) { Recipe.create!(title: "Spicy Chicken Wings", cook_time: 30, prep_time: 15, rating: 4.5,
-                                    image_link: "https://example.com/image2.jpg", author: "chefjohn",
-                                    ingredients: ["2 pounds chicken wings", "1 teaspoon salt", "2 tablespoons hot sauce",
-                                                  "1 tablespoon garlic powder"]) }
+    let!(:recipe2) { create(:recipe, title: "Spicy Chicken Wings", cook_time: 30, prep_time: 15, rating: 4.5,
+                                     image_link: "https://example.com/image2.jpg", author: "chefjohn",
+                                     ingredients: ["2 pounds chicken wings", "1 teaspoon salt", "2 tablespoons hot sauce",
+                                                   "1 tablespoon garlic powder"]) }
 
-    let!(:recipe3) { Recipe.create!(title: "Vegetable Stir Fry", cook_time: 20, prep_time: 5, rating: 4.2,
-                                    image_link: "https://example.com/image3.jpg", author: "veganlover",
-                                    ingredients: ["1 cup broccoli", "1 cup bell pepper", "1 tablespoon soy sauce",
-                                                  "1 tablespoon sesame oil"]) }
+    let!(:recipe3) { create(:recipe, title: "Vegetable Stir Fry", cook_time: 20, prep_time: 5, rating: 4.2,
+                                     image_link: "https://example.com/image3.jpg", author: "veganlover",
+                                     ingredients: ["1 cup broccoli", "1 cup bell pepper", "1 tablespoon soy sauce",
+                                                   "1 tablespoon sesame oil"]) }
 
     let(:recipe_query) { described_class.new }
 

@@ -1,0 +1,16 @@
+<turbo-frame id="search_results">
+  <%= form_with url: recipes_path, method: :get, data: { turbo: true }, class: "text-center mb-4" do |form| %>
+    <label for="ingredients" class="form-label">Enter ingredients (comma separated):</label>
+    <div class="d-flex justify-content-center mb-3">
+      <%= form.text_field :ingredients, 
+        value: @ingredients.join(', '), 
+        placeholder: "e.g. tomato, cheese", 
+        class: "form-control w-50" %>
+      <%= form.submit "Search", class: "btn btn-primary ms-2" %>
+    </div>
+  <% end %>
+
+  <div id="results">
+    <%= render partial: 'recipes_list', locals: { recipes: @recipes } %>
+  </div>
+</turbo-frame>

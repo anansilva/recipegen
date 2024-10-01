@@ -1,0 +1,16 @@
+<h3 class="text-xl font-semibold mb-2">Recipes:</h3>
+
+<% recipes.each do |recipe| %>
+  <div class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="<%= recipe.image_link %>" class="img-fluid rounded-start" alt="Recipe image" />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title"><%= recipe.title %></h5> 
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
