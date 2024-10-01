@@ -1,24 +1,34 @@
-# README
+# RecipeGen
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+(Add url from heroku)
 
-Things you may want to cover:
+## Tech stack
 
-* Ruby version
+Backend: Rails 7, PostgresSQL
+Frontend: Rails 7 (Hotwire), Bootstrap
+Devops: Github, Heroku, Docker
 
-* System dependencies
 
-* Configuration
+## User stories
 
-* Database creation
+As a user I can: 
 
-* Database initialization
+- Search for recipes based on ingredients I have at home
+- See the list of recipes ranked by relevance (number of matching ingredients in recipe + recipe rating + total cooking time)
 
-* How to run the test suite
+## Database
 
-* Services (job queues, cache servers, search engines, etc.)
+## System architecture
 
-* Deployment instructions
+## Deployment Architecture: 
+CI/CD pipeline automated with Github actions. Once pushed to main branch, the code goes through tests, code linting and security checks. If all stages pass, then code will be push to heroku. 
 
-* ...
+## Testing: 
+Query and request tests using rspec. 
+
+0. `make tdd` (if using docker)
+1. `bundle exec rspec spec`
+
+
+## Running the localy:
+
