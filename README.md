@@ -1,6 +1,8 @@
 # RecipeGen
 
-(Add url from heroku)
+Simply enter the ingredients you have on hand, and RecipeGen will instantly recommend delicious recipes tailored to your ingredients!
+
+[**Try here!**](https://recipegen-9adbb5478cf7.herokuapp.com/)
 
 ## 1. Problem definition
 
@@ -68,15 +70,25 @@ I considered storing the `ingredients` column in a separate `ingredients` table 
 - `ILIKE` performed well for the dataset size and pagination, even without any indexing.
 - Full-text search, while noticeably slower (even with pagination), improved significantly after adding indexing and an `ingredients_tsvector` column, though this does introduce some additional overhead.
 
-### 5.3 Search 
+### 5.3. Search 
 
 The code includes tests that assess both the search results and ranking. I found that these tests revealed almost no significant difference between `ILIKE` and full-text search. However, there was a slight improvement in ranking when I prioritized ingredient matches before applying the relevance ranking from `ts_rank`. While `ts_rank` did negatively impact the scores of recipes with long ingredient lists, it still did not yield the best results overall. Additionally, term frequency is not always a reliable indicator of the best recipes based on the entire list of selected ingredients. Consequently, I opted to incorporate the number of matched ingredients before utilizing `ts_rank`.
 
 Looking ahead, I see several opportunities for improving the search functionality. For example, a search for "milk" currently returns results for "coconut milk," which is not a direct match for the requested ingredient.
 
+I would also like to explore strategies for handling typos and similarities, such as matching 'tomoto' or 'tomta' to 'tomato.' Implementing a fuzzy search using PostgreSQL's pg_trgm extension could be an effective solution, although we should be cautious of potential unintended side effects.
+
 I would also consider implementing features such as filtering by category and author, allowing users to click on a recipe's category and view other related recipes that align with their chosen ingredients.
 
 Another interesting enhancement could involve assigning greater weight to perishable ingredients, ensuring that recipes utilizing these ingredients are prioritized, helping users make the most of their fresh produce.
+
+### 5.4.Final Thoughts
+
+It was an awesome exercise where I got to build something I can see myself using while exploring various text search options.
+
+Considering everything, if this were a minimum viable product (MVP), I would likely have opted for the pattern matching solution first. It’s simple and straightforward, allowing for a quick launch and rapid user feedback.
+
+For a more robust and scalable solution, I ultimately decided to implement full-text search, which I have chosen to keep.
 
 ## Deployment Architecture: 
 
