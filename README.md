@@ -25,7 +25,7 @@ As a user I can:
 - Search for recipes based on ingredients I have at home
 - See the list of recipes ranked by relevance (defined on the previous section)
 
-## Tech stack
+## 2. Tech stack
 
 **Backend**: Rails 7, PostgresSQL
 
@@ -33,17 +33,36 @@ As a user I can:
 
 **Devops**: Github (CI/CD), Heroku, Docker
 
-## Database
+## 3. Database
+
+<img width="618" alt="Screenshot 2024-10-01 at 12 30 51" src="https://github.com/user-attachments/assets/cae71a53-a242-4975-89c9-18c15f5ab9ae">
+
+Simple DB with a main `recipes` table with two `belongs_to` (optional) relationships with `categories` and `cuisines`. 
+
+I later discovered that cuisine data values were not fed into the scrapped dataset so this table is empty for the current data.
+
+Given the unstructured and random nature of the ingredient strings of the dataset, extracting a standardized list of ingredient names would require a complex and prone to error parsing setup. So I opted for a denormalized approach and saved the `ingredients` as an array of text directly in the `recipes` table.
+
+This implies pushing the complexity to the query side, so the next step would be to define if I'd go with pattern matching or full text search. 
+
+## 4. System architecture
 
 
+## 5. Problems and mitigations
 
-## System architecture
+### 5.1. Denormalization vs Normalization
 
+### 5.2 Performance 
 
-## Problems and mitigations
+### 5.3 Search constraints 
 
 ## Deployment Architecture: 
-CI/CD pipeline automated with Github actions. Once pushed to main branch, the code goes through tests, code linting and security checks. If all stages pass, then code will be push to heroku. 
+
+CI/CD pipeline automated with Github actions. 
+
+Once pushed to main branch, the code goes through tests, code linting and security checks. 
+
+If all stages pass, then code will be push to heroku. 
 
 ## Testing: 
 Query and request tests using rspec. 
