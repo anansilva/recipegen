@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_30_193431) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_02_124352) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,8 +38,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_30_193431) do
     t.bigint "cuisine_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.tsvector "ingredients_tsvector"
     t.index ["category_id"], name: "index_recipes_on_category_id"
     t.index ["cuisine_id"], name: "index_recipes_on_cuisine_id"
+    t.index ["ingredients_tsvector"], name: "index_recipes_on_ingredients_tsvector", using: :gin
   end
 
   add_foreign_key "recipes", "categories"

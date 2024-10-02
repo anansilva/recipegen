@@ -35,6 +35,12 @@ RSpec.describe RecipeQuery do
                                                    "2 large eggs", "1/4 cup melted butter", "tomato",
                                                    "1 teaspoon vanilla extract"]) }
 
+    before do
+      ActiveRecord::Base.connection.execute <<-SQL
+        UPDATE recipes
+        SET ingredients_tsvector = to_tsvector('english', array_to_string(ingredients, ' '))
+      SQL
+    end
 
     let(:recipe_query) { described_class.new }
 
@@ -60,6 +66,7 @@ RSpec.describe RecipeQuery do
 
       it 'returns more than one matching recipe for a single ingredient' do
         recipes = recipe_query.search(["salt"])
+
         expect(recipes).to include(recipe1, recipe2, recipe4, recipe5)
         expect(recipes).not_to include(recipe3)
       end
@@ -105,6 +112,7 @@ RSpec.describe RecipeQuery do
     context 'ingredients with more than one word' do
       it 'does the exact match of the ingredients' do
         recipes = recipe_query.search(["coconut milk"])
+
         expect(recipes).to include(recipe4)
         expect(recipes).not_to include(recipe1, recipe2, recipe3, recipe5)
       end
