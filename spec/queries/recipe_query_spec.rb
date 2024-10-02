@@ -52,7 +52,7 @@ RSpec.describe RecipeQuery do
         expect(recipes).not_to include(recipe1, recipe3, recipe4, recipe5)
       end
 
-      it 'is case insensitve' do
+      it 'is case insensitive' do
         recipes = recipe_query.search(["Chicken"])
         expect(recipes).to include(recipe2)
         expect(recipes).not_to include(recipe1, recipe3, recipe4, recipe5)
@@ -75,14 +75,30 @@ RSpec.describe RecipeQuery do
         recipes = recipe_query.search(["nonexistent ingredient"])
         expect(recipes).to be_empty
       end
+
+      it 'returns recipes that match multiple ingredients even if some are nonexistent' do
+        recipes = recipe_query.search(["cornmeal", "garlic", "nonexistent ingredient"])
+
+        expect(recipes).to include(recipe1, recipe2)
+        expect(recipes).not_to include(recipe3, recipe4, recipe5)
+      end
+
     end
 
+    # i would like coconut milk not to be considered here because it's not the same ingredient, how can we do that
     context 'composed ingredients containing words of other ingredients' do
       it 'does the exact match of ingredients (milk is not buttermilk)' do
         recipes = recipe_query.search(["milk"])
 
         expect(recipes).to include(recipe1, recipe4)
         expect(recipes).not_to include(recipe2, recipe3, recipe5)
+      end
+
+      it 'does the exact match of ingredients (buttermilk is not milk)' do
+        recipes = recipe_query.search(["buttermilk"])
+
+        expect(recipes).to include(recipe5)
+        expect(recipes).not_to include(recipe1, recipe2, recipe3, recipe4)
       end
     end
 
@@ -110,7 +126,7 @@ RSpec.describe RecipeQuery do
       context 'when ingredients are repeated but in singular/plural forms' do
         it 'returns recipes ordered by rating' do
           recipes = recipe_query.search(["tomato"])
-          expect(recipes).to eq([recipe5, recipe4])
+          expect(recipes).to eq([recipe4, recipe5])
         end
       end
     end
