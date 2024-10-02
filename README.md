@@ -98,12 +98,17 @@ Once pushed to main branch, the code goes through tests, code linting and securi
 
 If all stages pass, then code will be push to heroku. 
 
+## Running the locally (using docker):
+
+0. `make setup`
+1. `make server`
+
 ## Testing: 
 Query and request tests using rspec. 
 
-0. `make tdd` (if using docker)
+0. `make tdd` (using docker)
 1. `bundle exec rspec spec`
 
 
-## Running the localy:
+
 
