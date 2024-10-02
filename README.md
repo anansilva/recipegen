@@ -8,22 +8,22 @@
 
 ### 1.1. How can we define relevancy?
 
-Detailed specs for relancy are not provided so I defined it myself based on two criteria:
+Since detailed specifications for relevance were not provided, I established my own based on two key factors:
 
-- What I would like to experience as an actual user
-- Recipe and Ingredient metadata provided by the scrapped dataset
+- **User Experience**: What I would personally like to experience as an actual user.
+- **Available Metadata**: The recipe and ingredient metadata extracted from the scraped dataset.
 
-1. I want to see recipes that match all the searched ingredients first 
-2. Within the best matches, I want to see those that have fewer extra ingredients that I did not searched for
-3. If there are ties, show me the ones with better ranking
-4. If there are ties in the ranking, show me the ones that take less time to cook and prep
+1. **Exact Ingredient Match**: Recipes that contain all of the searched ingredients should be prioritized at the top of the results.
+2. **Minimal Extra Ingredients**: Among the top results, prioritize recipes that have the fewest additional ingredients beyond those searched for.
+3. **Higher User Ratings**: If multiple recipes match both the searched and extra ingredient criteria, rank them by user rating, with higher-rated recipes appearing first.
+4. **Shorter Prep and Cook Time**: In case of a tie in ratings, show recipes that require the least preparation and cooking time.
 
 ### 1.2. User stories
 
 As a user I can: 
 
-- Search for recipes based on ingredients I have at home
-- See the list of recipes ranked by relevance (defined on the previous section)
+- Search for recipes based on the ingredients I have at home.
+- View a list of recipes ranked by relevance, as defined in the previous section.
 
 ## 2. Tech stack
 
@@ -37,24 +37,46 @@ As a user I can:
 
 <img width="618" alt="Screenshot 2024-10-01 at 12 30 51" src="https://github.com/user-attachments/assets/cae71a53-a242-4975-89c9-18c15f5ab9ae">
 
-Simple DB with a main `recipes` table with two `belongs_to` (optional) relationships with `categories` and `cuisines`. 
+I designed a simple database structure with a main `recipes` table that includes two optional `belongs_to` relationships: one with `categories` and another with `cuisines`.
 
-I later discovered that cuisine data values were not fed into the scrapped dataset so this table is empty for the current data.
+(Note: I later discovered that the `cuisines` table remains empty for now, as the scraped dataset didn’t contain any cuisine data.)
 
-Given the unstructured and random nature of the ingredient strings of the dataset, extracting a standardized list of ingredient names would require a complex and prone to error parsing setup. So I opted for a denormalized approach and saved the `ingredients` as an array of text directly in the `recipes` table.
+Due to the inconsistent and random nature of the ingredient strings in the dataset, extracting a standardized list of ingredient names would require complex parsing logic, which is both error-prone and difficult to manage. Instead, I opted for a denormalized approach by storing the ingredients as an array of text directly within the recipes table.
 
-This implies pushing the complexity to the query side, so the next step would be to define if I'd go with pattern matching or full text search. 
+This approach shifts the complexity to the query side. The next step was to decide whether to use pattern matching or full-text search. Initially, I implemented a simple pattern-matching solution using `ILIKE`, which provided decent results in terms of both accuracy and performance.
+
+However, things became more complicated when I introduced pluralization/singularization logic (e.g., searching for "tomatoes" should return recipes containing "tomato"). As the number of rules increased, so did the code complexity and the risk of bugs, particularly with edge cases.
+
+At this point, I decided to switch to full-text search, which ultimately became my final solution (details on that below).
 
 ## 4. System architecture
 
+![image](https://github.com/user-attachments/assets/35a47c4f-a800-4de2-988b-f7009a417546)
 
-## 5. Problems and mitigations
+Single page application that updates the view with recipe cards once a search is submitted. 
+
+Query logic is isolated in a Query Object `RecipeQuery`.
+
+## 5. Problems, mitigations and other considerations
 
 ### 5.1. Denormalization vs Normalization
 
+I considered storing the `ingredients` column in a separate `ingredients` table instead of a column within the recipes table. However, given the current scope, this wouldn't provide any real benefit. At this stage, and with the dataset as it is, I'm not concerned about duplication. Additionally, having a separate table would introduce an extra `.joins` in my queries, adding unnecessary complexity.
+
 ### 5.2 Performance 
 
-### 5.3 Search constraints 
+- `ILIKE` performed well for the dataset size and pagination, even without any indexing.
+- Full-text search, while noticeably slower (even with pagination), improved significantly after adding indexing and an `ingredients_tsvector` column, though this does introduce some additional overhead.
+
+### 5.3 Search 
+
+The code includes tests that assess both the search results and ranking. I found that these tests revealed almost no significant difference between `ILIKE` and full-text search. However, there was a slight improvement in ranking when I prioritized ingredient matches before applying the relevance ranking from `ts_rank`. While `ts_rank` did negatively impact the scores of recipes with long ingredient lists, it still did not yield the best results overall. Additionally, term frequency is not always a reliable indicator of the best recipes based on the entire list of selected ingredients. Consequently, I opted to incorporate the number of matched ingredients before utilizing `ts_rank`.
+
+Looking ahead, I see several opportunities for improving the search functionality. For example, a search for "milk" currently returns results for "coconut milk," which is not a direct match for the requested ingredient.
+
+I would also consider implementing features such as filtering by category and author, allowing users to click on a recipe's category and view other related recipes that align with their chosen ingredients.
+
+Another interesting enhancement could involve assigning greater weight to perishable ingredients, ensuring that recipes utilizing these ingredients are prioritized, helping users make the most of their fresh produce.
 
 ## Deployment Architecture: 
 
