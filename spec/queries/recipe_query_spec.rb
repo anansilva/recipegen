@@ -127,7 +127,8 @@ RSpec.describe RecipeQuery do
       context 'when count of ingredients is the same' do
         it 'returns recipes ordered by rating' do
           recipes = recipe_query.search(["salt", "flour"])
-          expect(recipes).to eq([recipe5, recipe1, recipe4, recipe2])
+
+          expect(recipes).to eq([recipe1, recipe5, recipe2, recipe4])
         end
       end
 

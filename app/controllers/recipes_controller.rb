@@ -1,7 +1,7 @@
 class RecipesController < ApplicationController
   def index
     @ingredients = params[:ingredients].present? ? params[:ingredients].split(',').map(&:strip) : []
-    @pagy, @recipes = pagy(fetch_recipes(@ingredients), items: 10)
+    @pagy, @recipes = pagy(fetch_recipes(@ingredients), items: 10, limit: 10)
 
     respond_to do |format|
       format.turbo_stream { render partial: 'recipes_list', locals: partial_data }

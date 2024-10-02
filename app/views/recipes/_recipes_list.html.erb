@@ -1,9 +1,5 @@
 <div class="mt-5">
   <% if recipes.present? %>
-    <div class="d-flex justify-content-between">
-      <%== pagy_info(@pagy) %>
-      <%== pagy_bootstrap_nav(@pagy, link_extra: 'data-turbo-action=advance') %>
-    </div>
     <% recipes.each do |recipe| %>
       <div class="card mb-3">
         <div class="row g-0">
@@ -15,6 +11,7 @@
               <p class="text-muted mb-1 fw-semibold"><%= recipe.category&.name %></p>
               <h5 class="card-title mb-1"><%= recipe.title %></h5>
               <p class="text-muted fst-italic">By: <%= recipe.author %></p>
+               <p> <%= recipe.matched_ingredients_count %> Matched Ingredients: <%= recipe.matched_ingredients.join(', ').gsub(' & ', ' ') %></p>
               <p class="fw-bold">Ingredients:</p>
               <p><%= recipe.ingredients.join(', ') %></p>
               
@@ -23,7 +20,7 @@
                   <% full_stars = recipe.rating.floor %>
                   <% half_star = recipe.rating - full_stars >= 0.5 %>
                   <% (1..5).each do |star| %>
-                    <% if star <= full_stars %>
+                    <% if star <= full_stars %> 
                       <i class="bi bi-star-fill"></i>
                     <% elsif star == full_stars + 1 && half_star %>
                       <i class="bi bi-star-half"></i>
@@ -31,10 +28,11 @@
                       <i class="bi bi-star"></i>
                     <% end %>
                   <% end %>
+                  <%= recipe.rating %>
                 </div>
                 
                 <span class="position-relative p-3">
-                  <i class="bi bi-clock"></i> <%= recipe.prep_time + recipe.cook_time %> minutes
+                  <i class="bi bi-clock"></i> <%= recipe.total_time %> minutes
                 </span>
               </div>
             </div>
@@ -42,7 +40,7 @@
         </div>
       </div>
     <% end %>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between container">
       <%== pagy_info(@pagy) %>
       <%== pagy_bootstrap_nav(@pagy, link_extra: 'data-turbo-action=advance') %>
     </div>
