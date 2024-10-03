@@ -11,9 +11,22 @@
               <p class="text-muted mb-1 fw-semibold"><%= recipe.category&.name %></p>
               <h5 class="card-title mb-1"><%= recipe.title %></h5>
               <p class="text-muted fst-italic">By: <%= recipe.author %></p>
-               <p> <%= recipe.matched_ingredients_count %> Matched Ingredients: <%= recipe.matched_ingredients.join(', ').gsub(' & ', ' ') %></p>
-              <p class="fw-bold">Ingredients:</p>
-              <p><%= recipe.ingredients.join(', ') %></p>
+              <p>
+                <% 
+                  highlighted_ingredients = recipe.ingredients.map do |ingredient|
+                    ingredient_words = ingredient.split
+                    highlighted_words = ingredient_words.map do |word|
+                      if recipe.matched_ingredients.any? { |matched| word.downcase.include?(matched.downcase) }
+                        "<strong class='text-primary'>#{word}</strong>"
+                      else
+                        word
+                      end
+                    end
+                    highlighted_words.join(' ')
+                  end
+                %>
+                <%= highlighted_ingredients.join(', ').html_safe %>
+              </p>
               
               <div class="d-flex justify-content-between align-items-center mt-3">
                 <div class="star-rating">
