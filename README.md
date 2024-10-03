@@ -72,11 +72,17 @@ I considered storing the `ingredients` column in a separate `ingredients` table 
 
 ### 5.3. Search 
 
-The search tests revealed minimal difference between `ILIKE` and full-text search, though prioritizing ingredient matches before applying `ts_rank` led to slightly better rankings. While `ts_rank` tended to reduce scores for recipes with longer ingredient lists, it still didn’t yield optimal results overall. Additionally, term frequency wasn't a reliable measure of relevance when considering entire ingredient lists. To address this, I incorporated the number of matched ingredients before applying `ts_rank`.
+Initially, the search tests revealed little difference between the implemenation of `ILIKE` versus `ts_vector`. For both strategies, though, I started seeing some side effects when looking at compound words:
 
-Several opportunities exist for improving search functionality. For instance, searching for "milk" currently returns results for "coconut milk," which is not an exact match. Addressing such issues will refine search accuracy.
+When using pattern matching, `milk` returned recipes containing no `milk` but `buttermilk` which is a completely different ingredient. There are ways to avoid this but then I found myself adding edge case rules (e.g. pluralization/singularization) and things started to get a bit complex. 
 
-I also plan to explore handling typos and similar terms (e.g., matching 'tomoto' or 'tomta' to 'tomato'). A fuzzy search using PostgreSQL’s pg_trgm extension could be an effective solution, though care must be taken to avoid unintended results.
+On the other hand, the linguistic processing involved in full-text search evaluates words as a whole. For example, searching for `egg` will not return results for `eggplant`, but will capture stemmed variants like `eggs` (which is good, I want pluralization) but also `eggy` (as an adjective). Though some of the stemmed variants can also lead to misleading results we can argue that substrings containing an ingredient will be more common than word variants, so pros and cons considered, I decided to go with full-text search. 
+
+There are additional scenarios where neither strategy effectively manages contextual understanding. For instance, searching for "milk" currently returns results for "coconut milk," which does not represent an exact match. Implementing an exclusion list would introduce complexity, so in this case, a Natural Language Processing (NLP) solution would be more appropriate.
+
+In terms of ranking, prioritizing ingredient matches before applying `ts_rank` led to slightly better rankings. While `ts_rank` tended to reduce scores for recipes with longer ingredient lists, it still didn’t yield optimal results overall. Additionally, term frequency wasn't a reliable measure of relevance when considering entire ingredient lists. To address this, I incorporated the number of matched ingredients before applying `ts_rank`.
+
+Several opportunities exist for improving search functionality, like handling typos and similar terms (e.g., matching 'tomoto' or 'tomta' to 'tomato'). A fuzzy search using PostgreSQL’s pg_trgm extension could be an effective solution, though care must be taken to avoid unintended results.
 
 Other enhancements could include filtering by category and author, enabling users to click on a recipe category and view related recipes that match their selected ingredients. Additionally, weighting perishable ingredients more heavily could prioritize recipes using fresh produce, helping users minimize food waste.
 
