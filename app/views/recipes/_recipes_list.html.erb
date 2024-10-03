@@ -1,5 +1,7 @@
 <div class="mt-5">
   <% if recipes.present? %>
+    <h4>Here are the most popular recipes based on your ingredients:</h4>
+    <p class="text-muted">Add or remove ingredients to refine your search.</p>
     <% recipes.each do |recipe| %>
       <div class="card mb-3">
         <div class="row g-0">
