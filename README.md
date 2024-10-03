@@ -80,9 +80,9 @@ On the other hand, the linguistic processing involved in full-text search evalua
 
 There are additional scenarios where neither strategy effectively manages contextual understanding. For instance, searching for "milk" currently returns results for "coconut milk," which does not represent an exact match. Implementing an exclusion list would introduce complexity, so in this case, a Natural Language Processing (NLP) solution would be more appropriate.
 
-In terms of ranking, prioritizing ingredient matches before applying `ts_rank` led to slightly better rankings. While `ts_rank` tended to reduce scores for recipes with longer ingredient lists, it still didn’t yield optimal results overall. Additionally, term frequency wasn't a reliable measure of relevance when considering entire ingredient lists. To address this, I incorporated the number of matched ingredients before applying `ts_rank`.
+In terms of ranking, prioritizing number of ingredients matched before applying `ts_rank` led to slightly better rankings. While `ts_rank` tended to reduce scores for recipes with longer ingredient lists, it still didn’t yield optimal results overall. Additionally, term frequency wasn't a reliable measure of relevance when considering entire ingredient lists. To address this, I weighted the number of matched ingredients / total ingredients before applying `ts_rank`.
 
-Several opportunities exist for improving search functionality, like handling typos and similar terms (e.g., matching 'tomoto' or 'tomta' to 'tomato'). A fuzzy search using PostgreSQL’s pg_trgm extension could be an effective solution, though care must be taken to avoid unintended results.
+Several other opportunities exist for improving search functionality, like handling typos and similar terms (e.g., matching 'tomoto' or 'tomta' to 'tomato'). A fuzzy search using PostgreSQL’s pg_trgm extension could be an effective solution, though care must be taken to avoid unintended results.
 
 Other enhancements could include filtering by category and author, enabling users to click on a recipe category and view related recipes that match their selected ingredients. Additionally, weighting perishable ingredients more heavily could prioritize recipes using fresh produce, helping users minimize food waste.
 
