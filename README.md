@@ -31,7 +31,7 @@ As a user I can:
 
 **Backend**: Rails 7, PostgresSQL
 
-**Frontend**: Rails 7 (Hotwire), Bootstrap
+**Frontend**: Rails 7 (Hotwire & Stimulus), Bootstrap
 
 **Devops**: Github (CI/CD), Heroku, Docker
 
