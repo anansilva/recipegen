@@ -63,7 +63,7 @@ Query logic is isolated in a Query Object `RecipeQuery`.
 
 ### 5.1. Denormalization vs Normalization
 
-I considered storing the `ingredients` column in a separate `ingredients` table instead of a column within the recipes table. However, given the current scope, this wouldn't provide any real benefit. At this stage, and with the dataset as it is, I'm not concerned about duplication. Additionally, having a separate table would introduce an extra `.joins` in my queries, adding unnecessary complexity.
+I considered storing the `ingredients` column in a separate `ingredients` table instead of a column within the `recipes` table. However, given the current scope, this wouldn't provide any real benefit. At this stage, and with the dataset as it is, I'm not concerned about duplication. Additionally, having a separate table would introduce an extra `.joins` in my queries, adding unnecessary complexity.
 
 ### 5.2 Performance 
 
@@ -72,19 +72,17 @@ I considered storing the `ingredients` column in a separate `ingredients` table 
 
 ### 5.3. Search 
 
-The code includes tests that assess both the search results and ranking. I found that these tests revealed almost no significant difference between `ILIKE` and full-text search. However, there was a slight improvement in ranking when I prioritized ingredient matches before applying the relevance ranking from `ts_rank`. While `ts_rank` did negatively impact the scores of recipes with long ingredient lists, it still did not yield the best results overall. Additionally, term frequency is not always a reliable indicator of the best recipes based on the entire list of selected ingredients. Consequently, I opted to incorporate the number of matched ingredients before utilizing `ts_rank`.
+The search tests revealed minimal difference between `ILIKE` and full-text search, though prioritizing ingredient matches before applying `ts_rank` led to slightly better rankings. While `ts_rank` tended to reduce scores for recipes with longer ingredient lists, it still didn’t yield optimal results overall. Additionally, term frequency wasn't a reliable measure of relevance when considering entire ingredient lists. To address this, I incorporated the number of matched ingredients before applying `ts_rank`.
 
-Looking ahead, I see several opportunities for improving the search functionality. For example, a search for "milk" currently returns results for "coconut milk," which is not a direct match for the requested ingredient.
+Several opportunities exist for improving search functionality. For instance, searching for "milk" currently returns results for "coconut milk," which is not an exact match. Addressing such issues will refine search accuracy.
 
-I would also like to explore strategies for handling typos and similarities, such as matching 'tomoto' or 'tomta' to 'tomato.' Implementing a fuzzy search using PostgreSQL's pg_trgm extension could be an effective solution, although we should be cautious of potential unintended side effects.
+I also plan to explore handling typos and similar terms (e.g., matching 'tomoto' or 'tomta' to 'tomato'). A fuzzy search using PostgreSQL’s pg_trgm extension could be an effective solution, though care must be taken to avoid unintended results.
 
-I would also consider implementing features such as filtering by category and author, allowing users to click on a recipe's category and view other related recipes that align with their chosen ingredients.
-
-Another interesting enhancement could involve assigning greater weight to perishable ingredients, ensuring that recipes utilizing these ingredients are prioritized, helping users make the most of their fresh produce.
+Other enhancements could include filtering by category and author, enabling users to click on a recipe category and view related recipes that match their selected ingredients. Additionally, weighting perishable ingredients more heavily could prioritize recipes using fresh produce, helping users minimize food waste.
 
 ### 5.4.Final Thoughts
 
-It was an awesome exercise where I got to build something I can see myself using while exploring various text search options.
+It was an awesome exercise where I got to build something I can see myself using, while exploring various text search options.
 
 Considering everything, if this were a minimum viable product (MVP), I would likely have opted for the pattern matching solution first. It’s simple and straightforward, allowing for a quick launch and rapid user feedback.
 
@@ -94,7 +92,7 @@ For a more robust and scalable solution, I ultimately decided to implement full-
 
 CI/CD pipeline automated with Github actions. 
 
-Once pushed to main branch, the code goes through tests, code linting and security checks. 
+Once pushed to main branch, the code goes through tests (rspec), code linting (rubocop) and security checks (breakman). 
 
 If all stages pass, then code will be push to heroku. 
 
