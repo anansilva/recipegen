@@ -3,18 +3,25 @@
   Simply enter the ingredients you have on hand, and RecipeGen will instantly recommend delicious recipes tailored to your ingredients!
 </p>
 
-<turbo-frame id="search_results">
-  <%= form_with url: recipes_path, method: :get, data: { turbo: true }, class: "text-center my-4" do |form| %>
-    <div class="d-flex justify-content-center mb-3">
-      <%= form.text_field :ingredients, 
-        value: @ingredients.join(', '), 
-        placeholder: "e.g. tomato, cheese", 
-        class: "form-control w-50" %>
-      <%= form.submit "Search", class: "btn btn-primary ms-2" %>
-    </div>
-  <% end %>
+<%= form_with url: recipes_path, method: :get, data: { controller: "tags", turbo: true }, class: "text-center my-4" do |form| %>
+  <div class="d-flex justify-content-center mb-3">
+    <%= form.hidden_field :ingredients, id: "ingredients-hidden-field", value: @ingredients.join(', ') %>
 
-  <div id="results">
-    <%= render partial: 'recipes_list', locals: { recipes: @recipes, ingredients: @ingredients, recipes_total_count: @recipes_total_count } %>
+    <div class="form-control w-50 d-flex flex-wrap align-items-center" style="border-radius: 0;">
+      <div data-tags-target="tagsContainer" class="d-flex flex-wrap"></div>
+      <input 
+        type="text" 
+        class="border-0 flex-grow-1"
+        placeholder="Enter an ingredient and press Enter"
+        data-action="keydown->tags#addIngredient" 
+        data-tags-target="input"
+        style="outline: none; min-width: 50px;"
+        autofocus
+      />
+    </div>
   </div>
-</turbo-frame>
+<% end %>
+
+<div id="search_results" action="update">
+  <%= render partial: 'recipes_list', locals: { recipes: @recipes, ingredients: @ingredients, recipes_total_count: @recipes_total_count } %>
+</div>

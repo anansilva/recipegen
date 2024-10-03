@@ -4,7 +4,10 @@ class RecipesController < ApplicationController
     @pagy, @recipes = pagy(fetch_recipes(@ingredients), items: 10, limit: 10)
 
     respond_to do |format|
-      format.turbo_stream { render partial: 'recipes_list', locals: partial_data }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update('search_results', partial: 'recipes/recipes_list',
+                                                                   locals: partial_data)
+      end
       format.html
     end
   end
