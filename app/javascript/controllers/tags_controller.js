@@ -24,7 +24,7 @@ export default class extends Controller {
         this.inputTarget.value = "";
         this.renderTags();
         this.updateHiddenField();
-        this.triggerSearch();
+        // this.triggerSearch();
       }
     }
 
@@ -38,7 +38,7 @@ export default class extends Controller {
     this.tags = this.tags.filter(tag => tag !== ingredient);
     this.renderTags();
     this.updateHiddenField();
-    this.triggerSearch();
+    // this.triggerSearch();
   }
 
   removeLastIngredient() {
@@ -46,7 +46,7 @@ export default class extends Controller {
       this.tags.pop(); 
       this.renderTags();
       this.updateHiddenField();
-      this.triggerSearch();
+      // this.triggerSearch();
     }
   }
 

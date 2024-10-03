@@ -7,18 +7,22 @@
   <div class="d-flex justify-content-center mb-3">
     <%= form.hidden_field :ingredients, id: "ingredients-hidden-field", value: @ingredients.join(', ') %>
 
-    <div class="form-control d-flex flex-wrap align-items-center" style="border-radius: 0;">
+    <div class="form-control d-flex flex-wrap align-items-center" style="border-radius: 0; flex-grow: 1;">
       <div data-tags-target="tagsContainer" class="d-flex flex-wrap"></div>
       <input 
         type="text" 
         class="border-0 flex-grow-1"
-        placeholder="Enter an ingredient and press Enter"
+        placeholder="Type ingredient and press enter"
         data-action="keydown->tags#addIngredient" 
         data-tags-target="input"
         style="outline: none; min-width: 50px;"
         autofocus
       />
     </div>
+
+    <button type="button" class="btn btn-primary ms-2 w-100 py-2" data-action="tags#triggerSearch" style="max-width: 125px;">
+      Find Recipes
+    </button>
   </div>
 <% end %>
 
